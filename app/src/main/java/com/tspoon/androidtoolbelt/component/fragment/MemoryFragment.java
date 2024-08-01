@@ -5,12 +5,13 @@ import android.app.ActivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Process;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.tspoon.androidtoolbelt.App;
 import com.tspoon.androidtoolbelt.R;
@@ -19,22 +20,19 @@ import com.tspoon.androidtoolbelt.view.ArcView;
 
 import java.util.List;
 
-import butterknife.InjectView;
-import butterknife.OnClick;
 import timber.log.Timber;
 
 public class MemoryFragment extends BaseFragment {
 
-    @InjectView(R.id.memory_total_value) TextView mTextTotal;
-    @InjectView(R.id.memory_free_value) TextView mTextFree;
+    private TextView mTextTotal;
+    private TextView mTextFree;
     //@InjectView(R.id.memory_total_value) TextView mTextCurrent;
-    @InjectView(R.id.memory_low_value) TextView mTextLow;
-    @InjectView(R.id.memory_arc) ArcView mArc;
-
-    @InjectView(R.id.button_memory) Button mButtonFill;
+    private TextView mTextLow;
+    private ArcView mArc;
+    private Button mButtonFill;
 
     private MemoryUtils mMemoryUtils;
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
 
     private boolean mUpdate;
 
@@ -56,8 +54,14 @@ public class MemoryFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mTextTotal = view.findViewById(R.id.memory_total_value);
+        mTextFree = view.findViewById(R.id.memory_free_value);
+        mTextLow = view.findViewById(R.id.memory_low_value);
+        mArc = view.findViewById(R.id.memory_arc);
+        mButtonFill = view.findViewById(R.id.button_memory);
 
         mArc.setTextBottom("RAM");
+        mButtonFill.setOnClickListener(v -> onClickFill());
     }
 
     @Override
@@ -73,7 +77,6 @@ public class MemoryFragment extends BaseFragment {
         mUpdate = false;
     }
 
-    @OnClick(R.id.button_memory)
     public void onClickFill() {
         if (mButtonFill.getTag() == null) {
             App.getServiceHolder().startServices(mActivity);

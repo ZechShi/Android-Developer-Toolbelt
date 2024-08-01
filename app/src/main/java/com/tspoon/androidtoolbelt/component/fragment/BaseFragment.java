@@ -1,16 +1,18 @@
 package com.tspoon.androidtoolbelt.component.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
-import butterknife.ButterKnife;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 
 public abstract class BaseFragment extends Fragment {
 
-    protected ActionBarActivity mActivity;
+    protected AppCompatActivity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -19,9 +21,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mActivity = (ActionBarActivity) activity;
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof AppCompatActivity) {
+            mActivity = (AppCompatActivity) context;
+        }
     }
 
     @Override
@@ -34,13 +38,11 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setTitle();
-        ButterKnife.inject(this, view);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.reset(this);
     }
 
     @Override

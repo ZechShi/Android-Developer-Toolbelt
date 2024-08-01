@@ -1,14 +1,14 @@
 package com.tspoon.androidtoolbelt.component.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import butterknife.ButterKnife;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-public abstract class BaseAbstractToolbarActivity extends ActionBarActivity {
+
+public abstract class BaseAbstractToolbarActivity extends AppCompatActivity {
 
     protected ActionBar mActionBar;
 
@@ -17,24 +17,27 @@ public abstract class BaseAbstractToolbarActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
 
-        ButterKnife.inject(this);
+        findViews();
 
         setSupportActionBar(getToolbar());
         mActionBar = getSupportActionBar();
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setHomeButtonEnabled(true);
-        mActionBar.setDisplayShowTitleEnabled(true);
+        if (mActionBar != null) {
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+            mActionBar.setHomeButtonEnabled(true);
+            mActionBar.setDisplayShowTitleEnabled(true);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected void findViews() {
     }
 
     protected abstract Toolbar getToolbar();

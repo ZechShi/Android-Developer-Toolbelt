@@ -14,8 +14,9 @@ public class MemoryUtils {
 
     private static final int MB = 1024 * 1024;
 
-    private static MemoryUtils sInstance;
+    public static int ALLOCATION_BYTE_COUNT = 10 * MB;
 
+    private static MemoryUtils sInstance;
 
     private ActivityManager.MemoryInfo mMemoryInfo = new ActivityManager.MemoryInfo();
     private ActivityManager mActivityManager;
@@ -23,8 +24,7 @@ public class MemoryUtils {
     private MemoryUtils(Context context) {
         mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         update();
-
-        Timber.d(this.toString());
+        Timber.tag("MemoryUtils").d(this.toString());
     }
 
     public static MemoryUtils get(Context context) {
@@ -85,6 +85,7 @@ public class MemoryUtils {
                 ", lowMemory=" + mMemoryInfo.lowMemory +
                 ", threshold=" + mMemoryInfo.threshold +
                 ", totalMem=" + getRamSize() +
+                ", bytes=" + ALLOCATION_BYTE_COUNT / MB +
                 '}';
     }
 

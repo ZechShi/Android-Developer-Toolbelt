@@ -4,33 +4,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.crashlytics.android.Crashlytics;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.tspoon.androidtoolbelt.R;
 import com.tspoon.androidtoolbelt.component.fragment.MemoryFragment;
 import com.tspoon.androidtoolbelt.view.SlidingTabLayout;
 
-import butterknife.InjectView;
-
 
 public class MainActivity extends BaseAbstractToolbarActivity {
 
-    @InjectView(R.id.toolbar) Toolbar mToolbar;
-    @InjectView(R.id.viewpager) ViewPager mViewPager;
-    @InjectView(R.id.sliding_tabs) SlidingTabLayout mTabLayout;
+    private Toolbar mToolbar;
+    private ViewPager mViewPager;
+    private SlidingTabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Do this here so it doesn't start for all threads
-        Crashlytics.start(this);
 
         mViewPager.setAdapter(new PagerAdapter(this, getSupportFragmentManager()));
 
@@ -53,19 +49,18 @@ public class MainActivity extends BaseAbstractToolbarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_github:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_github))));
-                return true;
-            case R.id.action_share:
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TITLE, "The Android Developer's Toolbelt - " + getString(R.string.url_share));
-                startActivity(Intent.createChooser(intent, "Share with..."));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_github) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_github))));
+            return true;
+        } else if (itemId == R.id.action_share) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TITLE, "The Android Developer's Toolbelt - " + getString(R.string.url_share));
+            startActivity(Intent.createChooser(intent, "Share with..."));
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -76,6 +71,15 @@ public class MainActivity extends BaseAbstractToolbarActivity {
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
+    }
+
+    @Override
+    protected void findViews() {
+        super.findViews();
+        mToolbar = findViewById(R.id.toolbar);
+        mViewPager = findViewById(R.id.viewpager);
+        mTabLayout = findViewById(R.id.sliding_tabs);
+
     }
 
     private void openLink(String string) {
